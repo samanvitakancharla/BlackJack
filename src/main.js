@@ -106,6 +106,10 @@ async function dealAndAutoPlay() {
     
     renderHands();
     const $dealer = document.getElementById('dealer-hand');
+    if (!$dealer) {
+        console.error('Dealer hand element not found in dealAndAutoPlay');
+        return;
+    }
     $dealer.innerHTML = renderCard(dealerHand[0]) + `<div class="card dealer-card-back">?</div>`;
     
     await sleep(800);
@@ -166,7 +170,13 @@ function dealPhase() {
     ];
     dealerHand = [drawCard()]; 
     
-    document.getElementById('dealer-hand').innerHTML = renderCard(dealerHand[0]);
+    const dealerElement = document.getElementById('dealer-hand');
+    if (!dealerElement) {
+        console.error('Dealer hand element not found');
+        return;
+    }
+    
+    dealerElement.innerHTML = renderCard(dealerHand[0]);
     renderHands();
     showUI('playing-ui');
 }
@@ -243,6 +253,10 @@ function adjustTempCount(n) {
 function renderHands() {
     for (let i = 0; i < 3; i++) {
         const container = document.getElementById(`hand-${i}`);
+        if (!container) {
+            console.error(`Container hand-${i} not found`);
+            continue;
+        }
         container.innerHTML = playerHands[i].length ? `
             <div class="flex -space-x-6">${playerHands[i].map(renderCard).join('')}</div>
             <p class="text-[10px] font-bold text-white/40 uppercase">Hand ${i+1}</p>
@@ -281,6 +295,19 @@ export {
 
 // Make functions globally available for onclick handlers (only in browser environment)
 if (typeof window !== 'undefined') {
+  // Wait for DOM to be ready
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', () => {
+      console.log('DOM loaded, setting up global functions');
+      setupGlobalFunctions();
+    });
+  } else {
+    console.log('DOM already loaded, setting up global functions');
+    setupGlobalFunctions();
+  }
+}
+
+function setupGlobalFunctions() {
   window.selectMode = selectMode;
   window.exitToMenu = exitToMenu;
   window.startFlow = startFlow;
@@ -288,4 +315,12 @@ if (typeof window !== 'undefined') {
   window.handleBetAction = handleBetAction;
   window.handlePlayAction = handlePlayAction;
   window.adjustTempCount = adjustTempCount;
+  
+  // Debug: Check if elements exist
+  console.log('Hand elements:', {
+    'hand-0': !!document.getElementById('hand-0'),
+    'hand-1': !!document.getElementById('hand-1'),
+    'hand-2': !!document.getElementById('hand-2'),
+    'dealer-hand': !!document.getElementById('dealer-hand')
+  });
 }
