@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blackjack Ace-Five Trainer</title>
+    <link rel="stylesheet" href="/src/style.css">
+</head>
+<body>
+
+    <div id="app-container" class="w-full max-w-md flex flex-col space-y-4">
+        
+        <!-- START SCREEN / MENU -->
+        <div id="menu-screen" class="flex flex-col space-y-6 items-center py-12">
+            <h1 class="text-4xl font-black text-center text-emerald-300">Ace-Five<br><span class="text-white">Blackjack</span></h1>
+            <p class="text-center text-emerald-100 px-6">Master the simplest card counting system for H17 tables.</p>
+            
+            <div class="flex flex-col w-full space-y-4">
+                <button onclick="selectMode('STRATEGY')" class="bg-emerald-600 hover:bg-emerald-500 p-6 rounded-2xl font-bold border-b-8 border-emerald-900 text-xl transition-all active:translate-y-1 active:border-b-0">Strategy Trainer</button>
+                <button onclick="selectMode('COUNT')" class="bg-blue-600 hover:bg-blue-500 p-6 rounded-2xl font-bold border-b-8 border-blue-900 text-xl transition-all active:translate-y-1 active:border-b-0">Count Trainer</button>
+            </div>
+            <p class="text-[10px] uppercase tracking-widest text-emerald-500 font-bold">Rules: H17 | 3-Hands | No Surrender</p>
+        </div>
+
+        <!-- GAME UI -->
+        <div id="game-screen" class="hidden flex flex-col space-y-4">
+            <!-- Stats Bar -->
+            <div id="stats-bar" class="grid grid-cols-3 gap-2 text-center bg-black/30 p-3 rounded-2xl border border-white/10">
+                <div>
+                    <p class="text-[10px] uppercase text-emerald-400">Strategy</p>
+                    <p id="strat-accuracy" class="text-xl font-bold">100%</p>
+                </div>
+                <div>
+                    <p class="text-[10px] uppercase text-emerald-400">Betting</p>
+                    <p id="bet-accuracy" class="text-xl font-bold">100%</p>
+                </div>
+                <div>
+                    <p class="text-[10px] uppercase text-emerald-400">Counting</p>
+                    <p id="count-accuracy" class="text-xl font-bold">100%</p>
+                </div>
+            </div>
+
+            <!-- Main Game Area -->
+            <div class="felt-area w-full aspect-[4/3] flex flex-col items-center justify-between py-6 relative overflow-hidden">
+                <button onclick="exitToMenu()" class="absolute top-2 left-4 text-[10px] font-bold text-white/30 hover:text-white uppercase tracking-tighter">Exit to Menu</button>
+                
+                <!-- Dealer -->
+                <div class="flex flex-col items-center space-y-2">
+                    <div id="dealer-hand" class="flex space-x-2 h-16"></div>
+                    <p id="dealer-label" class="text-[10px] font-bold text-white/50 tracking-widest uppercase">Dealer</p>
+                </div>
+
+                <!-- Feedback Overlay -->
+                <div id="feedback" class="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 text-center w-full px-4 z-10 pointer-events-none">
+                    <p id="feedback-msg" class="text-lg font-black italic drop-shadow-md uppercase"></p>
+                </div>
+
+                <!-- Player Hands -->
+                <div id="player-hands-container" class="flex justify-around w-full px-2">
+                    <div id="hand-0" class="flex flex-col items-center p-2 space-y-2"></div>
+                    <div id="hand-1" class="flex flex-col items-center p-2 space-y-2"></div>
+                    <div id="hand-2" class="flex flex-col items-center p-2 space-y-2"></div>
+                </div>
+            </div>
+
+            <!-- CONTROLS CONTAINER -->
+            <div id="controls" class="min-h-[160px] flex flex-col justify-center">
+                
+                <!-- Pre-Round Counting UI -->
+                <div id="pre-counting-ui" class="hidden flex flex-col items-center space-y-4">
+                    <p class="text-center font-bold text-emerald-200">What is the <span class="text-white">Current</span> Running Count?</p>
+                    <div class="flex items-center space-x-6">
+                        <button onclick="adjustTempCount(-1)" class="bg-white/10 w-12 h-12 rounded-full text-2xl">-</button>
+                        <span id="temp-count-display" class="text-4xl font-black w-12 text-center">0</span>
+                        <button onclick="adjustTempCount(1)" class="bg-white/10 w-12 h-12 rounded-full text-2xl">+</button>
+                    </div>
+                    <button onclick="verifyPreCount()" class="bg-yellow-500 text-black w-full p-4 rounded-xl font-bold border-b-4 border-yellow-700">SUBMIT COUNT</button>
+                </div>
+
+                <!-- Betting UI -->
+                <div id="betting-ui" class="hidden space-y-4">
+                    <p class="text-center font-bold text-emerald-200">What is your bet for this round?</p>
+                    <div class="grid grid-cols-2 gap-4">
+                        <button onclick="handleBetAction('MIN')" class="bg-slate-700 hover:bg-slate-600 p-4 rounded-xl font-bold border-b-4 border-slate-900">MIN BET</button>
+                        <button onclick="handleBetAction('MAX')" class="bg-emerald-600 hover:bg-emerald-500 p-4 rounded-xl font-bold border-b-4 border-emerald-900">MAX BET</button>
+                    </div>
+                </div>
+
+                <!-- Playing UI (Manual) -->
+                <div id="playing-ui" class="hidden grid grid-cols-2 gap-3">
+                    <button onclick="handlePlayAction('H')" class="bg-red-600 p-4 rounded-xl font-bold border-b-4 border-red-800">HIT</button>
+                    <button onclick="handlePlayAction('S')" class="bg-green-600 p-4 rounded-xl font-bold border-b-4 border-green-800">STAND</button>
+                    <button id="double-btn" onclick="handlePlayAction('D')" class="bg-blue-600 p-4 rounded-xl font-bold border-b-4 border-blue-800">DOUBLE</button>
+                    <button id="split-btn" onclick="handlePlayAction('P')" class="bg-purple-600 p-4 rounded-xl font-bold border-b-4 border-purple-800">SPLIT</button>
+                </div>
+
+                <!-- Next Round/Continue UI -->
+                <button id="next-btn" onclick="startFlow()" class="hidden w-full bg-emerald-500 text-black p-4 rounded-xl font-bold text-lg border-b-4 border-emerald-800">NEXT ROUND &raquo;</button>
+            </div>
+        </div>
+    </div>
+
+    <script type="module" src="/src/main.js"></script>
+</body>
+</html>

@@ -1,0 +1,42 @@
+# Project: Vite/Tailwind Blackjack Trainer
+# Rules: H17 (Hit on 17), Ace-Five Card Counting System
+
+## Project Overview
+This is a Blackjack trainer application built with Vite and Tailwind CSS that implements:
+- H17 rules (dealer must hit on soft 17)
+- Ace-Five card counting system for training
+- Interactive blackjack gameplay with strategy guidance
+
+## Development Guidelines
+
+### Code Structure
+- Use vanilla JavaScript with ES6+ modules
+- Follow component-based architecture for game logic
+- Separate concerns: game state, UI rendering, card counting logic
+
+### Styling
+- Use Tailwind CSS for all styling
+- Implement responsive design for mobile and desktop
+- Use consistent color scheme for cards and game elements
+
+### Game Logic
+- Implement accurate H17 dealer rules
+- Track Ace-Five count throughout the game
+- Provide real-time strategy hints based on count
+- Include proper blackjack payout calculations (3:2, 6:5 options)
+
+### File Organization
+- `/src/js/` - JavaScript modules
+- `/src/css/` - Stylesheets
+- `/src/assets/` - Card images and game assets
+- Keep main entry point in `/src/main.js`
+
+### Testing
+- Test card counting accuracy
+- Verify dealer H17 rule implementation
+- Validate strategy recommendations
+
+## Performance
+- Optimize for smooth animations and transitions
+- Minimize DOM updates during gameplay
+- Use efficient state management for game logic
