@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>Blackjack Trainer</title>
+    <link rel="stylesheet" href="/src/mobile.css">
+</head>
+<body>
+
+    <div id="app-container" class="mobile-screen">
+        
+        <!-- START SCREEN / MENU -->
+        <div id="menu-screen" class="flex flex-col items-center justify-center h-full p-4">
+            <div class="text-center mb-8">
+                <h1 class="text-4xl font-black text-center mb-3">
+                    <span class="bg-gradient-to-r from-emerald-400 to-emerald-600 bg-clip-text text-transparent">Ace-Five</span>
+                    <br>
+                    <span class="text-white text-3xl">Blackjack</span>
+                </h1>
+                <p class="text-emerald-100 text-base px-4 max-w-xs mx-auto text-center">Master card counting for H17 tables</p>
+            </div>
+            
+            <div class="flex flex-col w-full max-w-xs space-y-4">
+                <button onclick="selectMode('STRATEGY')" class="btn-mobile">
+                    Strategy Trainer
+                </button>
+                <button onclick="selectMode('COUNT')" class="btn-mobile" style="background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);">
+                    Count Trainer
+                </button>
+            </div>
+            <div class="mt-6 px-3 py-1 bg-black/30 rounded-full">
+                <p class="text-xs uppercase tracking-widest text-emerald-400 font-bold">H17 | 3-Hands | No Surrender</p>
+            </div>
+        </div>
+
+        <!-- GAME UI -->
+        <div id="game-screen" class="hidden mobile-screen flex flex-col">
+            <!-- Stats Bar -->
+            <div class="stats-mobile">
+                <div class="stat-item-mobile">
+                    <p class="text-xs uppercase text-emerald-400 font-semibold mb-1">Strategy</p>
+                    <p id="strat-accuracy" class="text-lg font-bold text-white">100%</p>
+                </div>
+                <div class="stat-item-mobile">
+                    <p class="text-xs uppercase text-emerald-400 font-semibold mb-1">Betting</p>
+                    <p id="bet-accuracy" class="text-lg font-bold text-white">100%</p>
+                </div>
+                <div class="stat-item-mobile">
+                    <p class="text-xs uppercase text-emerald-400 font-semibold mb-1">Counting</p>
+                    <p id="count-accuracy" class="text-lg font-bold text-white">100%</p>
+                </div>
+            </div>
+
+            <!-- Main Game Area -->
+            <div class="mobile-game-area flex-1 flex flex-col">
+                <div class="felt-area flex-1 flex flex-col items-center justify-between py-4 relative">
+                    <button onclick="exitToMenu()" class="absolute top-2 left-2 text-xs font-bold text-white/40 hover:text-white uppercase tracking-tighter px-2 py-1 rounded">
+                        ← Menu
+                    </button>
+                    
+                    <!-- Dealer -->
+                    <div class="flex flex-col items-center space-y-2">
+                        <div id="dealer-hand" class="flex space-x-2 h-16"></div>
+                        <p id="dealer-label" class="text-xs font-bold text-white/50 tracking-widest uppercase">Dealer</p>
+                    </div>
+
+                    <!-- Feedback Overlay -->
+                    <div id="feedback" class="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 text-center w-full px-4 z-10 pointer-events-none">
+                        <p id="feedback-msg" class="text-lg font-black italic drop-shadow-lg uppercase"></p>
+                    </div>
+
+                    <!-- Player Hands -->
+                    <div id="player-hands-container" class="flex justify-around w-full px-2">
+                        <div id="hand-0" class="flex flex-col items-center p-2 space-y-2"></div>
+                        <div id="hand-1" class="flex flex-col items-center p-2 space-y-2"></div>
+                        <div id="hand-2" class="flex flex-col items-center p-2 space-y-2"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Mobile Controls -->
+            <div class="mobile-controls">
+                
+                <!-- Pre-Round Counting UI -->
+                <div id="pre-counting-ui" class="hidden flex flex-col items-center space-y-4">
+                    <p class="text-center font-bold text-emerald-200 text-base">
+                        Current Running Count?
+                    </p>
+                    <div class="flex items-center space-x-6">
+                        <button onclick="adjustTempCount(-1)" class="bg-white/20 hover:bg-white/30 w-12 h-12 rounded-full text-2xl font-bold touch-target">
+                            −
+                        </button>
+                        <span id="temp-count-display" class="text-4xl font-black w-12 text-center text-white">0</span>
+                        <button onclick="adjustTempCount(1)" class="bg-white/20 hover:bg-white/30 w-12 h-12 rounded-full text-2xl font-bold touch-target">
+                            +
+                        </button>
+                    </div>
+                    <button onclick="verifyPreCount()" class="btn-mobile warning">
+                        SUBMIT
+                    </button>
+                </div>
+
+                <!-- Betting UI -->
+                <div id="betting-ui" class="hidden space-y-4">
+                    <p class="text-center font-bold text-emerald-200 text-base">Place your bet</p>
+                    <div class="grid grid-cols-2 gap-3">
+                        <button onclick="handleBetAction('MIN')" class="btn-mobile" style="background: linear-gradient(135deg, #64748b 0%, #475569 100%);">
+                            MIN
+                        </button>
+                        <button onclick="handleBetAction('MAX')" class="btn-mobile">
+                            MAX
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Playing UI (Manual) -->
+                <div id="playing-ui" class="hidden grid grid-cols-2 gap-3">
+                    <button onclick="handlePlayAction('H')" class="btn-mobile danger">
+                        HIT
+                    </button>
+                    <button onclick="handlePlayAction('S')" class="btn-mobile success">
+                        STAND
+                    </button>
+                    <button id="double-btn" onclick="handlePlayAction('D')" class="btn-mobile" style="background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);">
+                        DOUBLE
+                    </button>
+                    <button id="split-btn" onclick="handlePlayAction('P')" class="btn-mobile" style="background: linear-gradient(135deg, #a855f7 0%, #9333ea 100%);">
+                        SPLIT
+                    </button>
+                </div>
+
+                <!-- Next Round/Continue UI -->
+                <button id="next-btn" onclick="startFlow()" class="hidden btn-mobile">
+                    NEXT ROUND
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script type="module" src="/src/main.js"></script>
+</body>
+</html>
