@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Debug Test</title>
+    <link rel="stylesheet" href="/src/style.css">
+</head>
+<body>
+    <div id="app-container">
+        <h1>Debug Test</h1>
+        <button onclick="testDeal()">Test Deal Cards</button>
+        <div id="dealer-hand"></div>
+        <div id="hand-0"></div>
+        <div id="hand-1"></div>
+        <div id="hand-2"></div>
+        <div id="debug-output"></div>
+    </div>
+
+    <script type="module">
+        import { dealPhase, playerHands } from './src/main.js'
+        
+        window.testDeal = function() {
+            console.log('Before dealPhase - playerHands:', playerHands);
+            dealPhase();
+            console.log('After dealPhase - playerHands:', playerHands);
+            
+            // Show debug info
+            const debugOutput = document.getElementById('debug-output');
+            debugOutput.innerHTML = `
+                <h3>Debug Info:</h3>
+                <p>Player Hands: ${JSON.stringify(playerHands)}</p>
+                <p>Hand 0: ${playerHands[0] ? playerHands[0].length + ' cards' : 'No cards'}</p>
+                <p>Hand 1: ${playerHands[1] ? playerHands[1].length + ' cards' : 'No cards'}</p>
+                <p>Hand 2: ${playerHands[2] ? playerHands[2].length + ' cards' : 'No cards'}</p>
+            `;
+        }
+        
+        // Auto-test on load
+        setTimeout(testDeal, 1000);
+    </script>
+</body>
+</html>

@@ -275,14 +275,17 @@ export {
   selectMode, exitToMenu, startFlow, verifyPreCount, handleBetAction, 
   handlePlayAction, adjustTempCount, dealPhase, dealAndAutoPlay,
   drawCard, getHandTotal, getOptimalMove, renderHands, renderCard,
-  updateStatsDisplay, sleep
+  updateStatsDisplay, sleep,
+  playerHands, dealerHand, currentHandIdx, runningCount, tempCountInput, stats
 };
 
-// Make functions globally available for onclick handlers
-window.selectMode = selectMode;
-window.exitToMenu = exitToMenu;
-window.startFlow = startFlow;
-window.verifyPreCount = verifyPreCount;
-window.handleBetAction = handleBetAction;
-window.handlePlayAction = handlePlayAction;
-window.adjustTempCount = adjustTempCount;
+// Make functions globally available for onclick handlers (only in browser environment)
+if (typeof window !== 'undefined') {
+  window.selectMode = selectMode;
+  window.exitToMenu = exitToMenu;
+  window.startFlow = startFlow;
+  window.verifyPreCount = verifyPreCount;
+  window.handleBetAction = handleBetAction;
+  window.handlePlayAction = handlePlayAction;
+  window.adjustTempCount = adjustTempCount;
+}
