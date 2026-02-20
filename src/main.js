@@ -260,3 +260,12 @@ function updateStatsDisplay() {
 }
 
 function sleep(ms) { return new Promise(resolve => setTimeout(resolve, ms)); }
+
+// Make functions globally available for onclick handlers
+window.selectMode = selectMode;
+window.exitToMenu = exitToMenu;
+window.startFlow = startFlow;
+window.verifyPreCount = verifyPreCount;
+window.handleBetAction = handleBetAction;
+window.handlePlayAction = handlePlayAction;
+window.adjustTempCount = adjustTempCount;
