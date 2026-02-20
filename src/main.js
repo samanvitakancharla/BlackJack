@@ -283,16 +283,6 @@ function updateStatsDisplay() {
 
 function sleep(ms) { return new Promise(resolve => setTimeout(resolve, ms)); }
 
-// Export functions for testing
-export {
-  RANKS, SUITS, VALUES, STRATEGY,
-  selectMode, exitToMenu, startFlow, verifyPreCount, handleBetAction, 
-  handlePlayAction, adjustTempCount, dealPhase, dealAndAutoPlay,
-  drawCard, getHandTotal, getOptimalMove, renderHands, renderCard,
-  updateStatsDisplay, sleep,
-  playerHands, dealerHand, currentHandIdx, runningCount, tempCountInput, stats
-};
-
 // Make functions globally available for onclick handlers (only in browser environment)
 if (typeof window !== 'undefined') {
   // Wait for DOM to be ready
@@ -324,3 +314,13 @@ function setupGlobalFunctions() {
     'dealer-hand': !!document.getElementById('dealer-hand')
   });
 }
+
+// Export functions for testing
+export {
+  RANKS, SUITS, VALUES, STRATEGY,
+  selectMode, exitToMenu, startFlow, verifyPreCount, handleBetAction, 
+  handlePlayAction, adjustTempCount, dealPhase, dealAndAutoPlay,
+  drawCard, getHandTotal, getOptimalMove, renderHands, renderCard,
+  updateStatsDisplay, sleep,
+  playerHands, dealerHand, currentHandIdx, runningCount, tempCountInput, stats
+};
