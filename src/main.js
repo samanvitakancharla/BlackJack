@@ -98,7 +98,11 @@ async function dealAndAutoPlay() {
     document.getElementById('feedback-msg').innerText = "Dealing...";
     
     dealerHand = [drawCard(), drawCard()]; 
-    playerHands = [[drawCard(), drawCard()], [drawCard(), drawCard()], [drawCard(), drawCard()]];
+    playerHands = [
+        [drawCard(), drawCard()], 
+        [drawCard(), drawCard()], 
+        [drawCard(), drawCard()]
+    ];
     
     renderHands();
     const $dealer = document.getElementById('dealer-hand');
@@ -155,7 +159,11 @@ async function dealAndAutoPlay() {
 
 function dealPhase() {
     currentHandIdx = 0;
-    playerHands = [[drawCard(), drawCard()], [drawCard(), drawCard()], [drawCard(), drawCard()]];
+    playerHands = [
+        [drawCard(), drawCard()], 
+        [drawCard(), drawCard()], 
+        [drawCard(), drawCard()]
+    ];
     dealerHand = [drawCard()]; 
     
     document.getElementById('dealer-hand').innerHTML = renderCard(dealerHand[0]);
@@ -260,6 +268,15 @@ function updateStatsDisplay() {
 }
 
 function sleep(ms) { return new Promise(resolve => setTimeout(resolve, ms)); }
+
+// Export functions for testing
+export {
+  RANKS, SUITS, VALUES, STRATEGY,
+  selectMode, exitToMenu, startFlow, verifyPreCount, handleBetAction, 
+  handlePlayAction, adjustTempCount, dealPhase, dealAndAutoPlay,
+  drawCard, getHandTotal, getOptimalMove, renderHands, renderCard,
+  updateStatsDisplay, sleep
+};
 
 // Make functions globally available for onclick handlers
 window.selectMode = selectMode;
